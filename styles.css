@@ -1,8 +1,13 @@
+body{
+    display: flex;
+    justify-content: center;
+}
 .formValidation{
     background-color: rgb(206, 204, 204);
     width: 30rem;
     display: flex;
     justify-content: center;
+    margin: 0;
 }
 .input{
     width: fit-content;
@@ -18,4 +23,10 @@
     padding: 7px 5px;
     margin: 1.5rem 0;
     display: block;
+}
+.error{
+    color:tomato;
+    padding-bottom: 11px;
+    float: left;
+    width:100%;
 }

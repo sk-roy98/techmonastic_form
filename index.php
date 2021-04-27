@@ -1,49 +1,53 @@
 <?php
 if (isset($_POST["register"])){
-
-    if(empty($_POST['email'])||
-    empty($_POST['password'])||
-    empty($_POST['confirm'])){
-        echo('please fill the required fields!'); 
+$error_msg="";
+    if(($_POST['email'] == "")||
+    ($_POST['password'] == "")||
+    ($_POST['confirm'] == "")){
+        $error_msg['required'] = ('please fill the required fields!'); 
     }
-}
+
     else if($_POST['password'] !== $_POST['confirm']){
-        echo('password and confirm password should match!');
+        $error_msg['confirm'] = ('password and confirm password should match!');
     }
 
-    else{
-    //   // uploading
-    //   $msg = "";
-    //   // If upload button is clicked ...
-    // if (isset($_POST['register'])){
-    //     $email = mysqli_real_escape_string($conn, $_REQUEST['email']);
-    //     $password = mysqli_real_escape_string($conn, $_REQUEST['password']);
-    //     $identity = mysqli_real_escape_string($conn, $_REQUEST['identity']);
-    //     $city = mysqli_real_escape_string($conn, $_REQUEST['city']);
-    //     $gender = mysqli_real_escape_string($conn, $_REQUEST['gender']);
-    //     $filename = $_FILES["image"]["name"];
-    //     $tempname = $_FILES["image"]["tmp_name"];    
-    //         $folder = "user/".$filename;
+    if(!$error_msg){
+
+        //connecting to database and not connected error
+        include('config/db_connect.php');
+
+
+    // uploading
+      $msg = "";
+
+        $email = mysqli_real_escape_string($conn, $_REQUEST['email']);
+        $password = mysqli_real_escape_string($conn, $_REQUEST['password']);
+        $identity = implode(",", $_POST['identity']);
+        $city = mysqli_real_escape_string($conn, $_POST['city']);
+        $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+        $filename = $_FILES["image"]["name"];
+        $tempname = $_FILES["image"]["tmp_name"];
+            $folder = "user/".$filename;
               
-    //         include('config/db_connect.php');
-      
-    //         // Get all the submitted data from the form
-    //         $sql = "INSERT INTO `user`(`id`, `email`, `password`, `identity`, `city`, `gender`, `image`) VALUES 
-    //         ('$email','$password','$identity','$city','$gender','$filename')";
+           
+            
+    // Get all the submitted data from the form
+            $sql = "INSERT INTO `user`(`id`, `email`, `password`, `identity`, `city`, `gender`, `image`) VALUES 
+             ('$email','$password','$identity','$city','$gender','$filename')";
             
             
-    //         // Execute query
-    //         mysqli_query($db, $sql);
+    // Execute query
+            mysqli_query($conn,$sql);
               
-    //         // Now let's move the uploaded image into the folder: user
-    //         if (move_uploaded_file($tempname, $folder))  {
-    //             $msg = "Image uploaded successfully";
-    //         }else{
-    //             $msg = "Failed to upload image";
-    //       }
-    // }
-}
+            // Now let's move the uploaded image into the folder: user
+            if (move_uploaded_file($tempname, $folder))  {
+                $msg = "Image uploaded successfully";
+            }else{
+                $msg = "Failed to upload image";
+          }/
     
+    }
+}    
 ?>
 
 <!DOCTYPE html>
@@ -60,12 +64,33 @@ if (isset($_POST["register"])){
     <form action=" " method="post" enctype="multipart/form-data" >
         <label for="mail">Email</label><br>
         <input  class="input box" type="email" id="mail" name="email"><br>
+        <?php 
+            if(isset($error_msg['required'])){
+                echo "<div class='error'>" . $error_msg['required']. "</div>";
+            }
+        ?></br>
 
         <label for="pw">Password</label><br>
         <input class="input box" type="password" id="pw" name ="password"><br>
+        <?php 
+            if(isset($error_msg['required'])){
+                echo "<div class='error'>" . $error_msg['required']. "</div>";
+            }
+            if(isset($error_msg['confirm'])){
+                echo "<div class='error'>" . $error_msg['confirm']. "</div>";
+            }
+        ?></br>
 
         <label for="confirm">Confirm Password</label><br>
         <input class="input box" type="Password" id="confirm" name ="confirm"><br>
+        <?php 
+            if(isset($error_msg['required'])){
+                echo "<div class='error'>" . $error_msg['required']. "</div>";
+            }
+            if(isset($error_msg['confirm'])){
+                echo "<div class='error'>" . $error_msg['confirm']. "</div>";
+            }
+        ?></br>
 
         <label for="identity1">choose identity</label><br>
         <input class="input" type="checkbox" id="Identity" name="identity[]" value="Aadhar">

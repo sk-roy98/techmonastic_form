@@ -1,7 +1,7 @@
 <?php
-    $conn = mysqli_connect('localhost' , 'souvik' , 'souvik1234' , 'formData');
+    $conn = mysqli_connect('localhost' , 'root' , '' , 'fromdata');
     
     if(! $conn){
-        die('connection error' . mysqli_connect_error());
+        echo mysqli_connect_error();
     }
 ?>

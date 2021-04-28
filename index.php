@@ -1,52 +1,54 @@
 <?php
 if (isset($_POST["register"])){
-$error_msg="";
+$error_msg = "";
     if(($_POST['email'] == "")||
     ($_POST['password'] == "")||
     ($_POST['confirm'] == "")){
-        $error_msg['required'] = ('please fill the required fields!'); 
+        $error_msg['required'] = "please fill the required fields!"; 
     }
 
     else if($_POST['password'] !== $_POST['confirm']){
-        $error_msg['confirm'] = ('password and confirm password should match!');
+        $error_msg['confirm'] = "password and confirm password should match!";
     }
-
+    //connecting to database and not connected error
+    $conn = mysqli_connect('localhost' , 'root' , '' , 'fromdata');
+    
+    if(! $conn){
+        $error = mysqli_connect_error();
+        
+    }
     if(!$error_msg){
-
-        //connecting to database and not connected error
-        include('config/db_connect.php');
-
-
     // uploading
-      $msg = "";
-
-        $email = mysqli_real_escape_string($conn, $_REQUEST['email']);
-        $password = mysqli_real_escape_string($conn, $_REQUEST['password']);
+        $email = $_POST['email'];
+        $password = $_POST['password'];
         $identity = implode(",", $_POST['identity']);
-        $city = mysqli_real_escape_string($conn, $_POST['city']);
-        $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+        $city = $_POST['city'];
+        $gender = $_POST['gender'];
         $filename = $_FILES["image"]["name"];
         $tempname = $_FILES["image"]["tmp_name"];
-            $folder = "user/".$filename;
-              
-           
-            
+            $folder = "users/".$filename;
+     
     // Get all the submitted data from the form
-            $sql = "INSERT INTO `user`(`id`, `email`, `password`, `identity`, `city`, `gender`, `image`) VALUES 
-             ('$email','$password','$identity','$city','$gender','$filename')";
+            $sql = "INSERT INTO users (email, password, identity, city, gender, image) VALUES 
+                ('$email','$password','$identity','$city','$gender','$filename')";
             
             
     // Execute query
-            mysqli_query($conn,$sql);
+            if(mysqli_query($conn,$sql)){
+                $succ = "successfully inserted";
+            }
+            else{
+                $fail = "failed to insert in table";
+            }
               
             // Now let's move the uploaded image into the folder: user
             if (move_uploaded_file($tempname, $folder))  {
                 $msg = "Image uploaded successfully";
             }else{
                 $msg = "Failed to upload image";
-          }/
+          }
     
-    }
+        }
 }    
 ?>
 
@@ -118,6 +120,17 @@ $error_msg="";
         <img id="display" width="200"/>
 
         <input class="button" type="submit" name = "register" value="Register"/>
+    <?php
+        if(isset($succ)){
+            echo $succ;
+        }
+        if(isset($fail)){
+            echo $fail;
+        }
+        if(isset($error)){
+            echo "failed to conn";
+        }
+    ?>
     </form>
     </div>
     <script>

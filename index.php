@@ -26,13 +26,18 @@ $error_msg = "";
         $gender = $_POST['gender'];
         $filename = $_FILES["image"]["name"];
         $tempname = $_FILES["image"]["tmp_name"];
-            $folder = "users/".$filename;
+        $folder = "images/".$filename;
+            // Now let's move the uploaded image into the folder: user
+            if (move_uploaded_file($tempname, $folder))  {
+                $msg = "Image uploaded successfully";
+            }else{
+                $msg = "Failed to upload image";
+          }
      
     // Get all the submitted data from the form
             $sql = "INSERT INTO users (email, password, identity, city, gender, image) VALUES 
                 ('$email','$password','$identity','$city','$gender','$filename')";
-            
-            
+      
     // Execute query
             if(mysqli_query($conn,$sql)){
                 $succ = "successfully inserted";
@@ -40,14 +45,7 @@ $error_msg = "";
             else{
                 $fail = "failed to insert in table";
             }
-              
-            // Now let's move the uploaded image into the folder: user
-            if (move_uploaded_file($tempname, $folder))  {
-                $msg = "Image uploaded successfully";
-            }else{
-                $msg = "Failed to upload image";
-          }
-    
+
         }
 }    
 ?>
@@ -115,20 +113,20 @@ $error_msg = "";
         <input class="input" type="radio" id="other" name="gender" value="other">
         <label for="other">Other</label><br>
 
-        <input class="input" type="file" id="file" name="image" accept="image/png , image/jpeg" onchange="uploaded(event)" name="image" style="display: none;">
         <label for="file" style="cursor: pointer;">Upload image here</label><br>
+        <input class="input" type="file" id="file" name="image" accept="image/png , image/jpeg" onchange="uploaded(event)" name="image"">
         <img id="display" width="200"/>
 
         <input class="button" type="submit" name = "register" value="Register"/>
     <?php
         if(isset($succ)){
-            echo $succ;
+            die ($succ);
         }
         if(isset($fail)){
-            echo $fail;
+            die ($fail);
         }
         if(isset($error)){
-            echo "failed to conn";
+            die ("failed to conn");
         }
     ?>
     </form>

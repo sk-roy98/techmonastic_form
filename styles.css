@@ -3,11 +3,12 @@ body{
     justify-content: center;
 }
 .formValidation{
-    background-color: rgb(206, 204, 204);
+    background-color: rgb(194, 192, 192);
     width: 30rem;
     display: flex;
-    justify-content: center;
-    margin: 0;
+    justify-items: center;
+    align-items: center;
+    padding-left: 2rem;
 }
 .input{
     width: fit-content;
@@ -15,7 +16,7 @@ body{
     margin: 8px 5px;
 }
 .box{
-    width: 17rem;
+    width: 22rem;
     margin : 5px 0;
 }
 .button{
@@ -30,3 +31,4 @@ body{
     float: left;
     width:100%;
 }
+

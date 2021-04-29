@@ -1,12 +1,14 @@
 <?php
 if (isset($_POST["register"])){
-$error_msg = "";
+$error_msg[] = "";
     if(($_POST['email'] == "")||
     ($_POST['password'] == "")||
     ($_POST['confirm'] == "")){
         $error_msg['required'] = "please fill the required fields!"; 
     }
-
+    if(!preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,12}$/', $_POST['password'])){
+        $error_msg['strength'] = "password should contain caps small special and number";
+    }
     else if($_POST['password'] !== $_POST['confirm']){
         $error_msg['confirm'] = "password and confirm password should match!";
     }
@@ -36,7 +38,7 @@ $error_msg = "";
      
     // Get all the submitted data from the form
             $sql = "INSERT INTO users (email, password, identity, city, gender, image) VALUES 
-                ('$email','$password','$identity','$city','$gender','$filename')";
+                ('$email',(md5('$password')),'$identity','$city','$gender','$filename')";
       
     // Execute query
             if(mysqli_query($conn,$sql)){
@@ -77,7 +79,10 @@ $error_msg = "";
                 echo "<div class='error'>" . $error_msg['required']. "</div>";
             }
             if(isset($error_msg['confirm'])){
-                echo "<div class='error'>" . $error_msg['confirm']. "</div>";
+             echo "<div class='error'>" . $error_msg['confirm']. "</div>";
+            }
+            if(isset($error_msg['strength'])){
+             echo "<div class='error'>" . $error_msg['strength']. "</div>";
             }
         ?></br>
 
